@@ -18,7 +18,7 @@ class AppFixtures extends Fixture
 
         $integration = new TelegramIntegration();
         $integration->setShop($shop);
-        $integration->setBotToken('123456789:AABBCCDDEEFFaabbccddeeff-demo-token');
+        $integration->setBotToken($_ENV['TELEGRAM_BOT_TOKEN'] ?? 'change-me');
         $integration->setChatId('987654321');
         $integration->setEnabled(true);
         $integration->setCreatedAt(new \DateTimeImmutable('-10 days'));

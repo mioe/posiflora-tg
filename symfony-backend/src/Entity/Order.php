@@ -29,7 +29,7 @@ class Order
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
-    public function getId(): ?int
+    public function getId(): ?\Symfony\Component\Uid\UuidV7
     {
         return $this->id;
     }

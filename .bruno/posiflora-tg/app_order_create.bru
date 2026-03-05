@@ -1,0 +1,24 @@
+meta {
+  name: app_order_create
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{host}}/api/shops/{{shopId}}/orders
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "number": "TEST-0002",
+    "total": "240.20",
+    "customerName": "misha2"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
