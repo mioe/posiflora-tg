@@ -12,14 +12,15 @@ use App\Repository\TelegramSendLogRepository;
 use App\Service\OrderService;
 use App\Telegram\TelegramClientInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 class OrderServiceTest extends TestCase
 {
-    private EntityManagerInterface $em;
-    private TelegramIntegrationRepository $integrationRepo;
-    private TelegramSendLogRepository $sendLogRepo;
-    private TelegramClientInterface $telegramClient;
+    private EntityManagerInterface&MockObject $em;
+    private TelegramIntegrationRepository&MockObject $integrationRepo;
+    private TelegramSendLogRepository&MockObject $sendLogRepo;
+    private TelegramClientInterface&MockObject $telegramClient;
     private OrderService $service;
 
     protected function setUp(): void
