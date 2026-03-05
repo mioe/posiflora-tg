@@ -25,10 +25,19 @@ export interface TelegramStatusResponse {
   failedCount: number;
 }
 
+export interface Shop {
+  id: string;
+  name: string;
+}
+
 @Injectable({ providedIn: 'root' })
 export class TelegramApiService {
   private http = inject(HttpClient);
   private baseUrl = '';
+
+  getShops(): Observable<Shop[]> {
+    return this.http.get<Shop[]>(`${this.baseUrl}/shops`);
+  }
 
   connect(shopId: string, payload: TelegramConnectRequest): Observable<TelegramConnectResponse> {
     return this.http.post<TelegramConnectResponse>(
