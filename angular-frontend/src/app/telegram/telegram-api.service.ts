@@ -33,7 +33,7 @@ export interface Shop {
 @Injectable({ providedIn: 'root' })
 export class TelegramApiService {
   private http = inject(HttpClient);
-  private baseUrl = '';
+  private baseUrl = '/api';
 
   getShops(): Observable<Shop[]> {
     return this.http.get<Shop[]>(`${this.baseUrl}/shops`);

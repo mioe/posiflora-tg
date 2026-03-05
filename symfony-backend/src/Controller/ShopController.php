@@ -7,7 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/shops')]
+#[Route('/api/shops')]
 class ShopController extends AbstractController
 {
     public function __construct(private ShopRepository $shopRepo) {}

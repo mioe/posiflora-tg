@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/shops/{shopId}/telegram')]
+#[Route('/api/shops/{shopId}/telegram')]
 class TelegramController extends AbstractController
 {
     public function __construct(

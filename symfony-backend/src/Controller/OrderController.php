@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/shops/{shopId}/orders')]
+#[Route('/api/shops/{shopId}/orders')]
 class OrderController extends AbstractController
 {
     public function __construct(
