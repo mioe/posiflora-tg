@@ -74,7 +74,7 @@ php bin/console doctrine:migrations:migrate --no-interaction
 php bin/console doctrine:fixtures:load --no-interaction
 
 # Запустить сервер
-php -S localhost:8080 -t public/
+php -S localhost:8080 -t public/ public/index.php
 ```
 
 ### Frontend
@@ -111,14 +111,18 @@ php bin/console doctrine:fixtures:load --no-interaction
 
 ## Тесты
 
+Тесты юнитные — используют моки, реальная БД не нужна.
+
+### Через Docker
+
+```bash
+docker compose exec backend php bin/phpunit
+```
+
+### Локально
+
 ```bash
 cd symfony-backend
-
-# Создать тестовую БД и применить миграции
-php bin/console doctrine:database:create --env=test --if-not-exists
-php bin/console doctrine:migrations:migrate --env=test --no-interaction
-
-# Запустить тесты
 php bin/phpunit
 ```
 
