@@ -1,0 +1,13 @@
+services:
+  postgres:
+    image: postgres:18-alpine
+    restart: always
+    environment:
+      - POSTGRES_MULTIPLE_DATABASES="${PG_DB_DEV}","${PG_DB_TEST}"
+      - POSTGRES_USER=${PG_USER}
+      - POSTGRES_PASSWORD=${PG_PASSWORD}
+    ports:
+      - ${PG_PORT}:5432
+    volumes:
+      - ./.snippets/postgres/init-databases:/docker-entrypoint-initdb.d
+      - ./.docker/postgres:/var/lib/postgresql/data/
