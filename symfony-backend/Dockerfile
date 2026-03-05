@@ -15,4 +15,4 @@ RUN composer run-script post-install-cmd --no-interaction || true
 
 EXPOSE 8080
 
-CMD ["php", "-S", "0.0.0.0:8080", "-t", "public/"]
+CMD ["php", "-S", "0.0.0.0:8080", "-t", "public/", "public/index.php"]
