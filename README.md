@@ -8,7 +8,17 @@ MVP интеграции Telegram-уведомлений для магазино
 - **Frontend**: Angular 21 / TypeScript
 - **Инфраструктура**: Docker / docker-compose
 
----
+
+## Инструменты разработки
+
+- **[Zed](https://zed.dev/)** — редактор кода
+- **[Claude Code](https://claude.ai/code)** — AI-агент для разработки
+- **[Bruno](https://www.usebruno.com/)** — клиент для тестирования API
+- **[DBeaver](https://dbeaver.io/)** — просмотр и управление БД
+- **[OrbStack](https://orbstack.dev/)** — запуск Docker-контейнеров
+
+> **Совместимость**: проверено на macOS / Linux. На Windows возможен баг с инициализацией PostgreSQL — образ использует `.sh`-скрипт для создания нескольких баз данных (`.snippets/postgres/init-databases`), который может не выполниться корректно в Docker Desktop на Windows из-за проблем с переносами строк (CRLF) или правами на файл.
+
 
 ## Быстрый старт (одна команда)
 
@@ -48,7 +58,6 @@ curl -s -X POST http://localhost:8080/api/shops/019cbd9e-63ee-7893-8f4c-04a5b40b
 | `PG_PORT`       | `54322`         | Порт PostgreSQL на хосте                         |
 | `TELEGRAM_MOCK` | `true`          | `true` — mock-режим, `false` — реальный Telegram |
 
----
 
 ## Запуск без Docker
 
@@ -88,10 +97,9 @@ npm start
 ID тестового магазина можно получить через API:
 
 ```bash
-# После seed'а посмотреть через psql или запрос к БД
+curl -s http://localhost:8080/api/shops | jq '.[0].id'
 ```
 
----
 
 ## Тестовые данные (seed)
 
@@ -105,7 +113,6 @@ ID тестового магазина можно получить через AP
 php bin/console doctrine:fixtures:load --no-interaction
 ```
 
----
 
 ## Тесты
 
@@ -130,11 +137,10 @@ php bin/phpunit
 2. **testIdempotencyPreventsDoubleSendAndNoDuplicateLog** — если лог уже есть, TelegramClient не вызывается и новый лог не создаётся
 3. **testTelegramFailureLogsFailedButOrderIsStillCreated** — при ошибке Telegram заказ создаётся, лог FAILED
 
----
 
 ## API
 
-### POST `/shops/{shopId}/telegram/connect`
+### POST `/api/shops/{shopId}/telegram/connect`
 
 Подключить / обновить Telegram-интеграцию.
 
@@ -142,11 +148,11 @@ php bin/phpunit
 { "botToken": "123456:TOKEN", "chatId": "987654321", "enabled": true }
 ```
 
-### GET `/shops/{shopId}/telegram/status`
+### GET `/api/shops/{shopId}/telegram/status`
 
 Статус интеграции (enabled, lastSentAt, sentCount/failedCount за 7 дней).
 
-### POST `/shops/{shopId}/orders`
+### POST `/api/shops/{shopId}/orders`
 
 Создать заказ (эмуляция). Автоматически отправляет Telegram-уведомление если интеграция включена.
 
@@ -156,9 +162,8 @@ php bin/phpunit
 
 Ответ включает поле `sendStatus`: `sent` / `failed` / `skipped`.
 
----
 
-## Режим фичи Telegram-а
+## Режим работы Telegram
 
 ### Mock (по умолчанию)
 
@@ -176,23 +181,23 @@ TELEGRAM_MOCK=false
 
 Используйте настоящий `botToken` (от @BotFather) и `chatId`.
 
----
 
 ## Тестирование API через Bruno
 
 В директории `.bruno/posiflora-tg/` находится коллекция запросов для [Bruno](https://www.usebruno.com/) — open-source альтернативы Postman/Insomnia.
 
 Чтобы открыть коллекцию:
+
 1. Установите Bruno
 2. `Open Collection` → выберите папку `.bruno/posiflora-tg`
 3. Настройте переменные `host` и `shopId` в разделе **Vars** коллекции
 
 Доступные запросы:
+
 - `POST app_order_create` — создать заказ и получить `sendStatus`
 
 ![Bruno — POST /orders](.docs/screenshots/bruno-order-create.png)
 
----
 
 ## Скриншоты
 
@@ -204,13 +209,12 @@ TELEGRAM_MOCK=false
 
 ![Уведомления в боте](.docs/screenshots/telegram-bot-messages.png)
 
----
 
 ## Допущения и упрощения
 
 - Аутентификация не реализована (не в объёме MVP)
 - `botToken` хранится в БД в открытом виде (в продакшне — шифровать через Symfony Secrets или env)
-- Frontend использует хардкод `http://localhost:8080` как baseUrl — в продакшне вынести в environment
+- Frontend использует Angular proxy для проксирования `/api` на backend — в продакшне вынести `baseUrl` в environment
 - Отправка Telegram синхронная; для продакшна стоит вынести в очередь (Symfony Messenger + RabbitMQ/Redis)
 - CORS не настроен — для prod нужен `nelmio/cors-bundle`
 - Тесты юнитные (моки), без реальной БД
