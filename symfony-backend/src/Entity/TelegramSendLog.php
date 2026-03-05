@@ -3,11 +3,13 @@
 namespace App\Entity;
 
 use App\Entity\Trait\InitUuidV7;
+use App\Enum\SendStatus;
 use App\Repository\TelegramSendLogRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TelegramSendLogRepository::class)]
+#[ORM\UniqueConstraint(columns: ['shop_id', 'shop_order_id'])]
 class TelegramSendLog
 {
     use InitUuidV7;
@@ -18,24 +20,19 @@ class TelegramSendLog
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false, columnDefinition: "UUID NOT NULL")]
-    private ?Order $shopOrder = null;
+    private ?Order $order = null;
 
     #[ORM\Column(type: Types::TEXT)]
     private ?string $message = null;
 
-    #[ORM\Column(length: 10)]
-    private ?string $status = null;
+    #[ORM\Column(enumType: SendStatus::class)]
+    private ?SendStatus $status = null;
 
-    #[ORM\Column(type: Types::TEXT)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $error = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $sentAt = null;
-
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
 
     public function getShop(): ?Shop
     {
@@ -49,14 +46,14 @@ class TelegramSendLog
         return $this;
     }
 
-    public function getShopOrder(): ?Order
+    public function getOrder(): ?Order
     {
-        return $this->shopOrder;
+        return $this->order;
     }
 
-    public function setShopOrder(?Order $shopOrder): static
+    public function setOrder(?Order $order): static
     {
-        $this->shopOrder = $shopOrder;
+        $this->order = $order;
 
         return $this;
     }
@@ -73,12 +70,12 @@ class TelegramSendLog
         return $this;
     }
 
-    public function getStatus(): ?string
+    public function getStatus(): ?SendStatus
     {
         return $this->status;
     }
 
-    public function setStatus(string $status): static
+    public function setStatus(SendStatus $status): static
     {
         $this->status = $status;
 
@@ -90,7 +87,7 @@ class TelegramSendLog
         return $this->error;
     }
 
-    public function setError(string $error): static
+    public function setError(?string $error): static
     {
         $this->error = $error;
 
