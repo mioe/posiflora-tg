@@ -8,7 +8,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TelegramIntegrationRepository::class)]
-#[ORM\UniqueConstraint(columns: ['shop_id'])]
+#[ORM\UniqueConstraint(columns: ["shop_id"])]
 class TelegramIntegration
 {
     use InitUuidV7;
