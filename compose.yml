@@ -11,3 +11,22 @@ services:
     volumes:
       - ./.snippets/postgres/init-databases:/docker-entrypoint-initdb.d
       - ./.docker/postgres:/var/lib/postgresql/data/
+
+  backend:
+    build: ./symfony-backend
+    ports:
+      - "8080:8080"
+    environment:
+      APP_ENV: dev
+      APP_SECRET: change-me-in-production
+      DATABASE_URL: postgresql://${PG_USER}:${PG_PASSWORD}@postgres:5432/${PG_DB_DEV}?serverVersion=18&charset=utf8
+      TELEGRAM_MOCK: "true"
+    depends_on:
+      - postgres
+
+  frontend:
+    build: ./angular-frontend
+    ports:
+      - "4200:4200"
+    depends_on:
+      - backend

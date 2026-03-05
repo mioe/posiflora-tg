@@ -1,0 +1,90 @@
+<div class="page">
+  <h1>Telegram-интеграция</h1>
+
+  <section class="card">
+    <h2>Настройки бота</h2>
+
+    <div class="field">
+      <label for="botToken">Bot Token</label>
+      <input
+        id="botToken"
+        type="text"
+        [(ngModel)]="botToken"
+        placeholder="123456:ABC-DEF..."
+      />
+    </div>
+
+    <div class="field">
+      <label for="chatId">Chat ID</label>
+      <input
+        id="chatId"
+        type="text"
+        [(ngModel)]="chatId"
+        placeholder="987654321"
+      />
+      <p class="hint">
+        Как узнать Chat ID: отправьте любое сообщение боту
+        <strong>@userinfobot</strong> или откройте
+        <code>https://api.telegram.org/bot&lt;TOKEN&gt;/getUpdates</code>
+        после первого сообщения боту — Chat ID будет в поле <code>message.chat.id</code>.
+      </p>
+    </div>
+
+    <div class="field toggle-field">
+      <label>
+        <input type="checkbox" [(ngModel)]="enabled" />
+        Включить уведомления
+      </label>
+    </div>
+
+    @if (saveError()) {
+      <p class="error">{{ saveError() }}</p>
+    }
+
+    <button (click)="save()" [disabled]="saving()">
+      {{ saving() ? 'Сохраняем...' : 'Сохранить' }}
+    </button>
+
+    @if (saveSuccess()) {
+      <p class="success">Настройки сохранены</p>
+    }
+  </section>
+
+  <section class="card">
+    <h2>Статус интеграции</h2>
+
+    @if (statusLoading()) {
+      <p>Загрузка...</p>
+    } @else if (status()) {
+      <table>
+        <tr>
+          <td>Статус</td>
+          <td>
+            <span [class]="status()!.enabled ? 'badge-on' : 'badge-off'">
+              {{ status()!.enabled ? 'Включено' : 'Выключено' }}
+            </span>
+          </td>
+        </tr>
+        <tr>
+          <td>Chat ID</td>
+          <td>{{ status()!.chatId ?? '—' }}</td>
+        </tr>
+        <tr>
+          <td>Последняя отправка</td>
+          <td>{{ status()!.lastSentAt ? (status()!.lastSentAt | date:'dd.MM.yyyy HH:mm') : '—' }}</td>
+        </tr>
+        <tr>
+          <td>Отправлено (7 дней)</td>
+          <td>{{ status()!.sentCount }}</td>
+        </tr>
+        <tr>
+          <td>Ошибок (7 дней)</td>
+          <td>{{ status()!.failedCount }}</td>
+        </tr>
+      </table>
+      <button class="secondary" (click)="loadStatus()">Обновить</button>
+    } @else if (statusError()) {
+      <p class="error">{{ statusError() }}</p>
+    }
+  </section>
+</div>
